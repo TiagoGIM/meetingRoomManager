@@ -8,26 +8,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/room")
+@RequestMapping("/api/v1")
 public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @PostMapping
-    public ResponseEntity<Object> createRoom(@RequestBody Room room){
+    @PostMapping("/rooms")
+    public ResponseEntity<Object> createRoom( @Valid @RequestBody Room room){
         roomService.createRoom(room);
         return new ResponseEntity<>("room is created sucessfully", HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/rooms")
     public List<Room> getAllRooms(){
         return roomService.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/rooms/{id}")
     public HttpEntity<? extends Object> getRoom(@PathVariable("id") Long id) throws Exception {
         Room founded = roomService.getById(id);
         if(founded == null){
@@ -36,13 +37,13 @@ public class RoomController {
         return new ResponseEntity<Room>(founded, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRoom(@RequestBody Room room, @PathVariable("id") Long id){
+    @PutMapping("rooms/{id}")
+    public ResponseEntity<Object> updateRoom(@Valid @RequestBody Room room, @PathVariable("id") Long id){
         roomService.updateRoom(id, room);
         return new ResponseEntity<>("room is updated", HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("rooms/{id}")
     public ResponseEntity<Object> deleteRoom(@PathVariable("id") Long id){
         roomService.deleteRoom(id);
         return new ResponseEntity<>("room is deleted", HttpStatus.OK);
